@@ -1,0 +1,68 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "tenants": {
+      "$tenantId": {
+        ".read": "auth != null && (auth.token.tenantId === $tenantId || auth.uid === $tenantId)",
+        ".write": "auth != null && (auth.token.tenantId === $tenantId || auth.uid === $tenantId)",
+        "employees": {
+          "$employeeId": {
+            ".validate": "newData.hasChildren(['id', 'name', 'sectorId', 'role', 'scaleCode', 'regime', 'gender', 'active']) && newData.child('name').isString() && newData.child('name').val().length >= 2 && newData.child('sectorId').isString() && newData.child('active').isBoolean()"
+          }
+        },
+        "sectors": {
+          "$sectorId": {
+            ".validate": "newData.hasChildren(['id', 'name', 'minCriticalPresence', 'isCommerce']) && newData.child('name').isString() && newData.child('minCriticalPresence').isNumber() && newData.child('minCriticalPresence').val() >= 1 && newData.child('isCommerce').isBoolean()"
+          }
+        },
+        "scaleTemplates": {
+          "$scaleId": {
+            ".validate": "newData.hasChildren(['id', 'code', 'name', 'workDays', 'restDays', 'dailyHours', 'weeklyHours', 'divisor', 'requiresUnionAgreement']) && newData.child('divisor').isNumber() && newData.child('divisor').val() >= 100 && newData.child('divisor').val() <= 240"
+          }
+        },
+        "shifts": {
+          "$shiftId": {
+            ".validate": "newData.hasChildren(['id', 'code', 'label', 'startTime', 'endTime']) && newData.child('startTime').isString() && newData.child('endTime').isString()"
+          }
+        },
+        "scheduleAssignments": {
+          "$assignmentId": {
+            ".validate": "newData.hasChildren(['id', 'employeeId', 'sectorId', 'date', 'statusCode', 'shiftCode']) && newData.child('date').isString() && newData.child('date').val().matches(/^\\d{4}-\\d{2}-\\d{2}$/) && newData.child('statusCode').val().matches(/^(T|F|FE|LM|LP|FA|AT|BH|TR)$/)"
+          }
+        },
+        "leavesAndVacations": {
+          "$leaveId": {
+            ".validate": "newData.hasChildren(['id', 'employeeId', 'sectorId', 'date', 'type', 'approved']) && newData.child('date').val().matches(/^\\d{4}-\\d{2}-\\d{2}$/) && newData.child('type').val().matches(/^(F|FE|LM|LP)$/) && newData.child('approved').isBoolean()"
+          }
+        },
+        "shiftSwaps": {
+          "$swapId": {
+            ".validate": "newData.hasChildren(['id', 'date', 'absentEmployeeId', 'substituteEmployeeId', 'sectorId', 'reason', 'createdAt']) && newData.child('absentEmployeeId').val() !== newData.child('substituteEmployeeId').val()"
+          }
+        },
+        "attendanceLogs": {
+          "$logId": {
+            ".validate": "newData.hasChildren(['id', 'employeeId', 'month', 'date', 'lateMinutes', 'earlyLeaveMinutes', 'unjustifiedAbsence', 'medicalCertificateDays']) && newData.child('month').val().matches(/^\\d{4}-\\d{2}$/) && newData.child('lateMinutes').isNumber() && newData.child('lateMinutes').val() >= 0"
+          }
+        },
+        "unionRules": {
+          "$ruleId": {
+            ".validate": "newData.hasChildren(['id', 'instrumentType', 'code', 'description', 'validUntil']) && newData.child('instrumentType').val().matches(/^(ACT|CCT)$/)"
+          }
+        },
+        "auditLogs": {
+          "$auditId": {
+            ".validate": "newData.hasChildren(['id', 'timestamp', 'action', 'entity', 'entityId', 'payloadHash']) && newData.child('payloadHash').isString() && newData.child('payloadHash').val().length === 64"
+          }
+        },
+        "syncQueue": {
+          "$queueId": {
+            ".validate": "newData.hasChildren(['id', 'entity', 'entityId', 'operation', 'payloadHash', 'status', 'createdAt']) && newData.child('payloadHash').isString() && newData.child('payloadHash').val().length === 64"
+          }
+        }
+      }
+    }
+  }
+}
+

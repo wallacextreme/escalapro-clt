@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.firebase/
+test-results/
+playwright-report/
+src-tauri/target/
+*.tsbuildinfo
+.env
+.env.*
