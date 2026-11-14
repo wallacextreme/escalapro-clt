@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === 'pages' ? '/escalapro-clt/' : '/',
   plugins: [react()],
   build: {
     target: 'chrome100',
@@ -21,5 +22,5 @@ export default defineConfig({
     port: 5173,
     strictPort: true
   }
-});
+}));
 
